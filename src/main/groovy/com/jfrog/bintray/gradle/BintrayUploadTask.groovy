@@ -631,14 +631,13 @@ class BintrayUploadTask extends DefaultTask {
             logger.info "{} can only use maven publications - skipping {}.", path, publication.name
             return []
         }
-        def identity = publication.mavenProjectIdentity
         def artifacts = publication.artifacts.findResults {
             boolean signedArtifact = (it instanceof org.gradle.plugins.signing.Signature)
             def signedExtension = signedArtifact ? it.toSignArtifact.getExtension() : null
             new Artifact(
-                name: identity.artifactId,
-                groupId: identity.groupId,
-                version: identity.version,
+                name: publication.artifactId,
+                groupId: publication.groupId,
+                version: publication.version,
                 extension: it.extension,
                 type: it.extension,
                 classifier: it.classifier,
@@ -649,9 +648,9 @@ class BintrayUploadTask extends DefaultTask {
 
         // Add the pom file
         artifacts << new Artifact(
-            name: identity.artifactId,
-            groupId: identity.groupId,
-            version: identity.version,
+            name: publication.artifactId,
+            groupId: publication.groupId,
+            version: publication.version,
             extension: 'pom',
             type: 'pom',
             file: publication.asNormalisedPublication().pomFile
